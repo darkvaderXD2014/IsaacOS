@@ -18,15 +18,17 @@ void isaacos_main(struct multiboot *mboot_ptr)
     init_video();
     
     motd();
+    puts("isaacOS> ");
     
     
 }
 
 void motd(void)
 {
-    puts("ISAACOS Alpha 1\n");
-    puts("Type HELP for help.\n");
-    puts("isaacOS> ");   
+    puts_colored("Isaac", WHITE,BLACK);
+    puts_colored("OS ", LIGHT_BLUE,BLACK);
+    puts("alpha 1\n");
+    puts("Type help for commands.\n");
 }
 
 void user_input(char *input) 
@@ -34,25 +36,28 @@ void user_input(char *input)
     do
     {
         
-        if (strcmp(input,"HELP") == 0) {
+        if (strcmp(input,"help") == 0) {
             puts("\nThis is are the listed commands: \n");
-            puts("END - to shutdown CPU \n");
-        } else if (strcmp(input,"CLEAR") == 0) 
+            puts("clear - clears the screen text. \n");
+            puts("motd - prints the message of the day. \n");
+            puts("end - to shutdown CPU \n");
+        } else if (strcmp(input,"clear") == 0) 
         {
             cls();
         }
-        else if (strcmp(input,"MOTD") == 0) 
+        else if (strcmp(input,"motd") == 0) 
         {
             motd();
         }
         else
         {
-            puts("Unknown command: ");
+            puts_colored("Unknown command:", WHITE, RED);
+            puts(" ");
             puts(input);
             puts("\n");
         }
         puts("isaacOS> ");
-    } while(strcmp(input, "END") == 0);  
+    } while(strcmp(input, "end") == 0);  
 }
 
 

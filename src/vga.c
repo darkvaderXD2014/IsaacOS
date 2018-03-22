@@ -133,6 +133,10 @@ void put(const char c)
         cursor_x = 0;
         cursor_y++;
     }
+    else if(c == '\b')
+    {
+        cursor_x--;
+    }
     else if(c >= ' ')
     {
         where = vgamemptr + (cursor_y * 80 + cursor_x);
@@ -154,7 +158,7 @@ void puts(unsigned char *text)
 
     for (i = 0; i < strlen(text); i++)
     {
-        putch(text[i], BLACK, WHITE);
+        putch(text[i], BLACK, DARK_GREY);
     }
 }
 
