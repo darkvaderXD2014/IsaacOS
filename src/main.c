@@ -27,8 +27,10 @@ void motd(void)
 {
     puts_colored("Isaac", WHITE,BLACK);
     puts_colored("OS ", LIGHT_BLUE,BLACK);
-    puts("alpha 1\n");
+    puts("0.01\n");
+    puts("Made by Isaac Sapelino. \n\n");
     puts("Type help for commands.\n");
+    puts("\n");
 }
 
 void user_input(char *input) 
@@ -37,7 +39,7 @@ void user_input(char *input)
     {
         
         if (strcmp(input,"help") == 0) {
-            puts("\nThis is are the listed commands: \n");
+            puts("\nThese are the listed commands: \n");
             puts("clear - clears the screen text. \n");
             puts("motd - prints the message of the day. \n");
             puts("end - to shutdown CPU \n");
