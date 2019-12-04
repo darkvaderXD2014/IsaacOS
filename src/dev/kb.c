@@ -7,10 +7,11 @@
 
 #define BACKSPACE 0x0E
 #define ENTER 0x1C
-#define LEFT_SHIFTUP 0xaa
 #define LEFT_SHIFTDOWN 0x2a
 
 
+void put_kbuffer(uint8 scancode);
+void put_sbuffer(uint8 scancode);
 static char key_buffer[256];
 
 #define SC_MAX 57
@@ -41,32 +42,64 @@ const char usc_ascii[] = { '?', '?', '!', '@', '#', '$', '%', '^',
         'H', 'J', 'K', 'L', ':', '\'', '~', '?', '\\', 'Z', 'X', 'C', 'V', 
 'B', 'N', 'M', '<', '>', '0', '0', '0', '0', ' '};
 
+void put_kbuffer(uint8 scancode)
+{
+	char letter = usc_ascii[(int)scancode];
+    char str[2] = {letter, '\0'};
+    append(key_buffer, letter);
+    puts(str);
+}
+
+void put_sbuffer(uint8 scancode)
+{
+	char letter = sc_ascii[(int)scancode];
+    char str[2] = {letter, '\0'};
+    append(key_buffer, letter);
+    puts(str);
+}
+
+
 static void keyboard_callback(registers_t regs) {
     uint8 scancode = inportb(0x60);
     
     if (scancode > SC_MAX) return;
     
-    if (scancode == LEFT_SHIFTUP)
-        state = 0;
-    if (scancode == LEFT_SHIFTDOWN)
+    if(scancode & 0x80)
     {
-        state = 1;
+    	if((scancode == LEFT_SHIFTDOWN) & 0x7F)
+    	{
+    		state--;
+    	}
     }
-    
-    if (scancode == BACKSPACE) {
-        backspace(key_buffer);
-        put('\b');
-    } else if (scancode == ENTER) {
-        puts("\n");
-        user_input(key_buffer);
-        key_buffer[0] = '\0';
-    } 
-    else {
-        char letter = sc_ascii[(int)scancode];
-        char str[2] = {letter, '\0'};
-        append(key_buffer, letter);
-        puts(str);
-    }
+    else
+	{
+		if((scancode == LEFT_SHIFTDOWN))
+		{
+			state++;
+		}
+		else
+		{
+			if(state == 1)
+			{
+				put_kbuffer(scancode);
+			}
+			else
+			{
+				put_sbuffer(scancode);
+			}
+		}
+		if(scancode == BACKSPACE)
+		{
+			backspace(key_buffer);
+        	put('\b');
+		}
+		else if(scancode == ENTER)
+		{
+			puts("\n");
+        	user_input(key_buffer);
+        	key_buffer[0] = '\0';
+		}
+	}
     UNUSED(regs);
 }
 

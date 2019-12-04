@@ -15,13 +15,16 @@ NASM = nasm
 
 INCDIR := -I./src/include 
 
-C_FLAGS = -c -Wall -m32 -ggdb -gstabs+ -nostdinc -fno-builtin -fno-stack-protector $(INCDIR)
+C_FLAGS = -c -g -Wall -m32 -ggdb -gstabs+ -nostdinc -fno-builtin -fno-stack-protector $(INCDIR)
 LD_FLAGS = -T ./src/boot/linker.ld -m elf_i386 -nostdlib
 ASM_FLAGS = --32
 NASM_FLAGS = -Werror -felf
 
 all: $(S_OBJECTS) $(C_OBJECTS) $(AS_OBJECTS) link
 	@echo "DONE!"
+	
+debug: all
+	@./debug.sh
 
 %.c.o: %.c
 	@echo "Compiling C" $< ...
@@ -56,11 +59,16 @@ compile: $(S_OBJECTS) $(C_OBJECTS) $(AS_OBJECTS) link
 .PHONY:clean
 clean:
 	@echo "Removing All Objectfiles and kernel."
-	$(RM) $(S_OBJECTS) $(C_OBJECTS) $(AS_OBJECTS) kernel.bin isaacos.iso
+	$(RM) $(S_OBJECTS) $(C_OBJECTS) $(AS_OBJECTS) kernel.sym kernel.bin isaacos.iso
 .PHONY:qemu-kernel
 qemu-kernel:
 	@echo "Debugging kernel mode"
 	@qemu-system-i386 -kernel kernel.bin
+
+qemu-debug:
+	@echo "Running Testing"
+	@qemu-system-i386 -s -S -kernel kernel.bin
+	
 .PHONY:toolchain
 toolchain: 
 	@bash tools/build.sh
