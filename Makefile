@@ -13,16 +13,16 @@ LD = i686-elf-ld
 ASM = i686-elf-as
 NASM = nasm
 
-INCDIR := -I./src/include 
+INCDIR := -I./src/include
 
-C_FLAGS = -c -g -Wall -m32 -ggdb -gstabs+ -nostdinc -fno-builtin -fno-stack-protector $(INCDIR)
+C_FLAGS = -c -g -Wall -m32 -ggdb -gstabs+ -nostdinc -fno-builtin -fno-stack-protector -g $(INCDIR)
 LD_FLAGS = -T ./src/boot/linker.ld -m elf_i386 -nostdlib
 ASM_FLAGS = --32
 NASM_FLAGS = -Werror -felf
 
 all: $(S_OBJECTS) $(C_OBJECTS) $(AS_OBJECTS) link
 	@echo "DONE!"
-	
+
 debug: all
 	@./debug.sh
 
@@ -33,7 +33,7 @@ debug: all
 %.s.o: %.s
 	@echo "Compiling Assembly" $< ...
 	$(ASM) $(ASM_FLAGS) -o $@ $<
-%.asm.o: %.asm 
+%.asm.o: %.asm
 	@echo "Compiling NASM" $< ...
 	$(NASM) $(NASM_FLAGS) -o $@ $<
 
@@ -68,7 +68,7 @@ qemu-kernel:
 qemu-debug:
 	@echo "Running Testing"
 	@qemu-system-i386 -s -S -kernel kernel.bin
-	
+
 .PHONY:toolchain
-toolchain: 
+toolchain:
 	@bash tools/build.sh

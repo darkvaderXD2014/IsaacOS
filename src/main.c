@@ -11,16 +11,16 @@ void motd(void);
 
 void isaacos_main(struct multiboot *mboot_ptr)
 {
-    isr_install();    
-    asm volatile("sti");    
-    init_timer(50);    
+    isr_install();
+    asm volatile("sti");
+    init_timer(50);
     init_keyboard();
     init_video();
-    
+
     motd();
     puts("isaacOS> ");
-    
-    
+
+
 }
 
 void motd(void)
@@ -33,21 +33,21 @@ void motd(void)
     puts("\n");
 }
 
-void user_input(char *input) 
+void user_input(char *input)
 {
     do
     {
-        
+
         if (strcmp(input,"help") == 0) {
             puts("\nThese are the listed commands: \n");
             puts("clear - clears the screen text. \n");
             puts("motd - prints the message of the day. \n");
             puts("end - to shutdown CPU \n");
-        } else if (strcmp(input,"clear") == 0) 
+        } else if (strcmp(input,"clear") == 0)
         {
             cls();
         }
-        else if (strcmp(input,"motd") == 0) 
+        else if (strcmp(input,"motd") == 0)
         {
             motd();
         }
@@ -59,7 +59,7 @@ void user_input(char *input)
             puts("\n");
         }
         puts("isaacOS> ");
-    } while(strcmp(input, "end") == 0);  
+    } while(strcmp(input, "end") == 0);
 }
 
 
