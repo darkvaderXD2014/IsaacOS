@@ -5,7 +5,7 @@ unsigned char *memcpy(unsigned char *dest, const unsigned char *src, int count)
 {
 	char *csrc = (char *)src;
 	char *cdest = (char *)dest;
-	
+
 	for (int i=0;i < count;i++)
 	{
 		cdest[i] = csrc[i];
@@ -16,7 +16,7 @@ unsigned char *memcpy(unsigned char *dest, const unsigned char *src, int count)
 unsigned char *memset(unsigned char *dest, unsigned char val, int count)
 {
     char *cdest = (char *)dest;
-   
+
     while(*cdest && count > 0)
     {
     	*cdest = val;
@@ -70,6 +70,27 @@ int str_to_int(string ch)
 	return n;
 }
 
+unsigned char int_to_hex(uint8 in)
+{
+    uint32 rmd, q, dn=0, m, l;
+    int i=1,j,tmp;
+    char s;
+    q = in;
+    for(l=q; l>0; l=l/16)
+    {
+        tmp = l % 16;
+        if(tmp < 10)
+            tmp = tmp + 48; else
+            tmp = tmp + 55;
+            dn=dn*100+tmp;
+    }
+    for(m=dn; m>0; m=m/100)
+    {
+        s=m % 100;
+    }
+    return s;
+}
+
 void * malloc(int nbytes)
 {
 	char variable[nbytes];
@@ -79,14 +100,14 @@ void * malloc(int nbytes)
 unsigned char inportb (unsigned short _port)
 {
     unsigned char rv;
-    __asm__ __volatile__ ("inb %1, %0" : "=a" (rv) : "dN" (_port));
+    __asm__ __volatile__("inb %%dx, %%al" : "=a" (rv) : "dN" (_port));
     return rv;
 }
 
 void outportb (unsigned short _port, unsigned char _data)
 {
     __asm__ __volatile__ ("outb %1, %0" : : "dN" (_port), "a" (_data));
-} 
+}
 
 void outportw (uint16 port, uint16 data)
 {

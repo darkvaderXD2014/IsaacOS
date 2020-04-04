@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+# Kernel/OS Stuff
+*.bin
+*.iso
