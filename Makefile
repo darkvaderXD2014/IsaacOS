@@ -69,6 +69,10 @@ qemu-debug:
 	@echo "Running Testing"
 	@qemu-system-i386 -s -S -kernel kernel.bin
 
+gdb:
+	@echo "Running GDB"
+	gdb -ex 'target remote localhost:1234' -ex 'symbol-file kernel.sym'
+
 .PHONY:toolchain
 toolchain:
 	@bash tools/build.sh
