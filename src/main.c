@@ -29,7 +29,7 @@ void motd(void)
     puts_colored("OS ", LIGHT_BLUE,BLACK);
     puts("0.01\n");
     puts("Made by Isaac Sapelino. \n\n");
-    puts("Type help for commands.\n");
+    puts("Type 'help' for commands.\n");
     puts("\n");
 }
 

@@ -8,6 +8,11 @@
 #define BACKSPACE 0x0E
 #define ENTER 0x1C
 #define LEFT_SHIFTDOWN 0x2a
+#define LEFT_SHIFTUP 0xAA
+#define RIGHT_SHIFTDOWN 0x36
+
+#define KEY_RELEASED 0x80
+#define KEY_PRESSED 0x7F
 
 
 void put_kbuffer(uint8 scancode);
@@ -16,7 +21,7 @@ static char key_buffer[256];
 
 #define SC_MAX 57
 
-int state = 0;
+
 
 const char *sc_name[] = { "ERROR", "Esc", "1", "2", "3", "4", "5", "6",
     "7", "8", "9", "0", "-", "=", "\b", "Tab", "q", "w", "e",
@@ -50,38 +55,57 @@ void put_kbuffer(uint8 scancode)
     puts(str);
 }
 
-void put_sbuffer(uint8 scancode)
+void put_buffer(uint8 scancode)
 {
+
 	char letter = sc_ascii[(int)scancode];
     char str[2] = {letter, '\0'};
     append(key_buffer, letter);
     puts(str);
 }
 
-
 static void keyboard_callback(registers_t regs) {
     uint8 scancode = inportb(0x60);
+    static int state = 0;
 
-    if (scancode > SC_MAX) return;
+    if (scancode >= SC_MAX) return;
 
-    if(scancode == BACKSPACE)
+    switch(scancode)
     {
-        backspace(key_buffer);
-        put('\b');
+        case BACKSPACE:
+        {
+            backspace(key_buffer);
+            put('\b');
+            break;
+        }
+        case ENTER:
+        {
+            puts("\n");
+            user_input(key_buffer);
+            key_buffer[0] = '\0';
+            break;
+        }
+        default:
+        {
+            if(state == 1)
+            {
+                char letter = usc_ascii[(int)scancode];
+                char str[2] = {letter, '\0'};
+                append(key_buffer, letter);
+                puts(str);
+            }
+            else
+            {
+                char letter = sc_ascii[(int)scancode];
+                char str[2] = {letter, '\0'};
+                append(key_buffer, letter);
+                puts(str);
+            }
+            break;
+        }
+
     }
-    else if(scancode == ENTER)
-    {
-        puts("\n");
-        user_input(key_buffer);
-        key_buffer[0] = '\0';
-    }
-    else
-    {
-        char letter = sc_ascii[(int)scancode];
-        char str[2] = {letter, '\0'};
-        append(key_buffer,letter);
-        puts(str);
-    }
+
 
     UNUSED(regs);
 }
